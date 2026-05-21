@@ -1,1 +1,347 @@
-ssss
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  height: 100vh; width: 100vw;
+  display: flex; align-items: center;
+  justify-content: flex-end;
+  padding-right: 28px;
+  pointer-events: none;
+}
+
+#shield-menu {
+  display: none;
+  pointer-events: none;
+  width: 272px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--accent),0.25);
+  background: rgba(8,6,16,0.95);
+  box-shadow: 0 0 40px rgba(var(--primary),0.18), 0 8px 32px rgba(0,0,0,0.7);
+  animation: slideIn 0.22s ease;
+}
+@keyframes slideIn {
+  from { opacity:0; transform: translateX(30px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+/* ===== Header ===== */
+.menu-header {
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid rgba(var(--accent),0.15);
+  background: rgba(var(--primary),0.1);
+  text-align: center;
+}
+.server-logo {
+  width: 44px; height: 44px; border-radius: 12px;
+  margin: 0 auto 7px;
+  background: rgba(var(--primary),0.2);
+  border: 1.5px solid rgba(var(--accent),0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: rgba(var(--accent),1);
+}
+.server-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+.server-name {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 12px; font-weight: 700;
+  color: rgba(var(--accent),1); letter-spacing: 1px;
+}
+.server-tag {
+  font-family: 'Cairo', sans-serif;
+  font-size: 9px; color: rgba(var(--accent),0.45);
+  margin-top: 3px; letter-spacing: 2px;
+}
+
+.accent-line {
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(var(--accent),0.7), transparent);
+}
+
+/* ===== Body ===== */
+.menu-body {
+  padding: 9px 9px 8px;
+  direction: rtl;
+  background: rgba(var(--options-bg, 18,12,34), 0.38);
+}
+.sec-title {
+  font-size: 9px; color: rgba(var(--accent),0.58);
+  letter-spacing: 1.4px; padding: 0 4px 6px; font-weight: 600;
+}
+
+/* ===== Item ===== */
+.item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 9px; border-radius: 10px; margin-bottom: 5px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+}
+.item.item-on { border-color: rgba(var(--accent),0.35); background: rgba(var(--primary),0.12); }
+.item.selected {
+  border-color: rgba(var(--accent),0.7);
+  box-shadow: 0 0 0 1px rgba(var(--accent),0.25), 0 0 18px rgba(var(--primary),0.18);
+  background: rgba(var(--primary),0.18);
+}
+
+.item-l { display: flex; align-items: center; gap: 8px; }
+.ico {
+  width: 30px; height: 30px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+  background: rgba(var(--primary),0.2); color: rgba(var(--accent),0.9);
+  border: 1px solid rgba(var(--accent),0.25);
+}
+.iname { color: #e0d0ff; font-size: 12px; font-weight: 600; }
+.idesc { display: none; }
+
+.tog {
+  width: 38px; height: 20px; border-radius: 11px;
+  background: rgba(var(--options-bg, 18,12,34),0.86); border: 1px solid rgba(var(--accent),0.2);
+  position: relative; flex-shrink: 0; transition: all 0.28s;
+}
+.tog.on { background: rgba(var(--primary),0.9); border-color: rgba(var(--accent),0.6); }
+.tog-k {
+  width: 14px; height: 14px; border-radius: 50%; background: #fff;
+  position: absolute; top: 2px; right: 2px; transition: right 0.28s;
+}
+.tog.on .tog-k { right: calc(100% - 16px); }
+
+.badge {
+  font-size: 9px; padding: 1px 7px; border-radius: 20px;
+  font-weight: 700; min-width: 40px; text-align: center; transition: all 0.2s;
+}
+.b-off { background: rgba(80,0,40,0.5); color: rgba(255,120,160,0.7); border: 1px solid rgba(200,60,100,0.25); }
+.b-on  { background: rgba(var(--primary),0.35); color: rgba(var(--accent),1); border: 1px solid rgba(var(--accent),0.4); }
+
+.tog-wrap { display:flex; flex-direction:column; align-items:center; gap:5px; }
+
+.empty-state {
+  display: none;
+  border: 1px dashed rgba(var(--accent),0.24);
+  border-radius: 10px;
+  color: rgba(var(--accent),0.6);
+  text-align: center;
+  font-size: 10px;
+  padding: 10px 8px;
+  margin: 4px 0 2px;
+}
+
+.menu-hint {
+  border-top: 1px solid rgba(var(--accent),0.14);
+  background: rgba(var(--primary),0.08);
+  color: rgba(var(--accent),0.62);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  text-align: center;
+  padding: 7px 6px;
+}
+
+/* ===== Notifications ===== */
+#notif-container {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 285px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+.notif {
+  background: rgba(12, 15, 22, 0.48);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-right: 4px solid var(--ncolor, #10b981);
+  border-radius: 12px;
+  color: #e5e7eb;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+  animation: notifIn .24s ease;
+}
+
+.notif.dying {
+  animation: notifOut .24s ease forwards;
+}
+
+@keyframes notifIn {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes notifOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(18px); }
+}
+
+.nb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 13px 10px;
+}
+
+.ni {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--ncolor, #10b981);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.nemoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ntitle {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 2px;
+  color: #f9fafb;
+}
+
+.nmsg {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.35;
+}
+
+.nbar {
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+}
+
+.nbar-i {
+  height: 100%;
+  width: 100%;
+  background: var(--ncolor, #10b981);
+  box-shadow: 0 0 8px var(--ncolor, #10b981);
+  transform-origin: right center;
+  animation: shrink var(--d, 4000ms) linear forwards;
+}
+
+@keyframes shrink {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+</style>
+</head>
+<body>
+
+<div id="notif-container"></div>
+
+<div id="shield-menu">
+  <div class="menu-header">
+    <div class="server-logo" id="srv-logo">&#9670;</div>
+    <div class="server-name" id="srv-name">Shield</div>
+    <div class="server-tag"  id="srv-tag">FIVE M</div>
+  </div>
+  <div class="accent-line"></div>
+
+  <div class="menu-body">
+    <div class="sec-title">&#9654; إعدادات الحماية</div>
+
+    <!-- مانع الانتقال -->
+    <div class="item" id="item-antiteleport" style="display:none">
+      <div class="item-l">
+        <div class="ico"><i class="ti ti-map-pin-off"></i></div>
+        <div>
+          <div class="iname">مانع الانتقال</div>
+          <div class="idesc">حماية من التليبورت إليك</div>
+        </div>
+      </div>
+      <div class="tog-wrap">
+        <div class="tog" id="tog-antiteleport"><div class="tog-k"></div></div>
+        <span class="badge b-off" id="badge-antiteleport">مغلق</span>
+      </div>
+    </div>
+
+    <!-- مانع السحب tptome -->
+    <div class="item" id="item-antitptome" style="display:none">
+      <div class="item-l">
+        <div class="ico"><i class="ti ti-arrow-bar-to-left"></i></div>
+        <div>
+          <div class="iname">مانع السحب</div>
+          <div class="idesc">حماية من سحبك إلى الإداري</div>
+        </div>
+      </div>
+      <div class="tog-wrap">
+        <div class="tog" id="tog-antitptome"><div class="tog-k"></div></div>
+        <span class="badge b-off" id="badge-antitptome">مغلق</span>
+      </div>
+    </div>
+
+    <!-- مانع الكلبشة -->
+    <div class="item" id="item-antihandcuff" style="display:none">
+      <div class="item-l">
+        <div class="ico"><i class="ti ti-hand-stop"></i></div>
+        <div>
+          <div class="iname">مانع الكلبشة</div>
+          <div class="idesc">حماية من القيود</div>
+        </div>
+      </div>
+      <div class="tog-wrap">
+        <div class="tog" id="tog-antihandcuff"><div class="tog-k"></div></div>
+        <span class="badge b-off" id="badge-antihandcuff">مغلق</span>
+      </div>
+    </div>
+
+    <!-- مانع الدراق -->
+    <div class="item" id="item-antidrag" style="display:none">
+      <div class="item-l">
+        <div class="ico"><i class="ti ti-user-off"></i></div>
+        <div>
+          <div class="iname">مانع الدراق</div>
+          <div class="idesc">حماية من سحبك يدوياً</div>
+        </div>
+      </div>
+      <div class="tog-wrap">
+        <div class="tog" id="tog-antidrag"><div class="tog-k"></div></div>
+        <span class="badge b-off" id="badge-antidrag">مغلق</span>
+      </div>
+    </div>
+
+    <!-- مانع الكاري -->
+    <div class="item" id="item-anticarry" style="display:none">
+      <div class="item-l">
+        <div class="ico"><i class="ti ti-man"></i></div>
+        <div>
+          <div class="iname">مانع الكاري</div>
+          <div class="idesc">حماية من الحمل</div>
+        </div>
+      </div>
+      <div class="tog-wrap">
+        <div class="tog" id="tog-anticarry"><div class="tog-k"></div></div>
+        <span class="badge b-off" id="badge-anticarry">مغلق</span>
+      </div>
+    </div>
+
+    <div class="empty-state" id="empty-state">لا يوجد خيارات متاحة لك حاليا</div>
+  </div>
+
+  <div class="menu-hint">↑ ↓ تنقل | Enter تفعيل | Backspace إغلاق</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
